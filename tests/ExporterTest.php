@@ -28,11 +28,33 @@ final class ExporterTest extends TestCase
 
         $this->assertTrue($exporter->exportMetric(
             Metric::gauge('pi', 3.1415, [], 'My gauge'),
-            'test_gauge',
+            'test_gauge'
         ));
 
         $outFile = $exporter->collectorDir . 'test_gauge.prom';
         $this->assertFileEquals(__DIR__ . '/data/test_gauge.prom', $outFile);
+    }
+
+    public function testExportLabels()
+    {
+        $exporter = $this->getExporter();
+
+        $this->assertTrue($exporter->exportMetric(
+            Metric::gauge('pi', 3.1415, ['foo' => 'bar'], 'My gauge'),
+            'test_labels_one'
+        ));
+
+        $outFile = $exporter->collectorDir . 'test_labels_one.prom';
+        $this->assertFileEquals(__DIR__ . '/data/test_labels_one.prom', $outFile);
+
+
+        $this->assertTrue($exporter->exportMetric(
+            Metric::gauge('pi', 3.1415, ['baz' => 'cux', 'foo' => 'bar'], 'My gauge'),
+            'test_labels_two'
+        ));
+
+        $outFile = $exporter->collectorDir . 'test_labels_two.prom';
+        $this->assertFileEquals(__DIR__ . '/data/test_labels_two.prom', $outFile);
     }
 
     public function testExportMultiple()
@@ -42,7 +64,7 @@ final class ExporterTest extends TestCase
         $this->assertTrue($exporter->exportMetrics([
             Metric::gauge('pi', 3.1415, [], 'My gauge'),
             Metric::counter('bugs', 42, [], 'My counter'),
-            ], 'test_multiple',
+            ], 'test_multiple'
         ));
 
         $outFile = $exporter->collectorDir . 'test_multiple.prom';
@@ -56,7 +78,7 @@ final class ExporterTest extends TestCase
 
         $exporter->exportMetric(
             Metric::gauge('Woo ps', 34, [], 'The metric description'),
-            'test_metric',
+            'test_metric'
         );
     }
 
@@ -67,7 +89,7 @@ final class ExporterTest extends TestCase
 
         $exporter->exportMetric(
             Metric::gauge('metric_name', 34, [], 'The metric description'),
-            'test_metric',
+            'test_metric'
         );
     }
 

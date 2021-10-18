@@ -57,7 +57,7 @@ class Exporter extends Component
 
             $labels = [];
             foreach ($metric->labels as $label => $value) {
-                $labels[] = "$label=\"$value\",";
+                $labels[] = "$label=\"$value\"";
             }
             $labels = '{' . join(',', $labels) . '}';
 
