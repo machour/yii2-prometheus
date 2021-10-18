@@ -1,0 +1,37 @@
+{
+    "name": "machour/yii2-prometheus",
+    "description": "Prometheus exporter for Yii 2",
+    "keywords": ["yii2", "component", "prometheus", "grafana"],
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/machour/yii2-prometheus/issues?state=open",
+        "source": "https://github.com/machour/yii2-prometheus"
+    },
+    "autoload": {
+        "psr-4": {
+            "machour\\yii2\\prometheus\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "machourunit\\yii2\\prometheus\\": "tests"
+        }
+    },
+    "scripts": {
+        "tests": "./vendor/bin/phpunit --bootstrap tests/bootstrap.php tests"
+    },
+    "require": {
+        "php": ">=5.4",
+        "yiisoft/yii2": "~2.0.13"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

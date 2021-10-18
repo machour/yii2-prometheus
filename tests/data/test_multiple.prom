@@ -1,0 +1,6 @@
+#HELP pi My gauge
+#TYPE pi gauge
+pi 3.1415
+#HELP bugs My counter
+#TYPE bugs counter
+bugs 42

@@ -1,0 +1,3 @@
+#HELP pi My gauge
+#TYPE pi gauge
+pi 3.1415
