@@ -16,7 +16,7 @@ This extension uses the [textfile collector of Node Exporter](https://github.com
 
 [![Latest Stable Version](https://poser.pugx.org/machour/yii2-prometheus/v/stable.png)](https://packagist.org/packages/machour/yii2-prometheus)
 [![Total Downloads](https://poser.pugx.org/machour/yii2-prometheus/downloads.png)](https://packagist.org/packages/machour/yii2-prometheus)
-[![Build Status](https://github.com/machour/yii2-prometheus/workflows/build/badge.svg)](https://github.com/machour/yii2-prometheus/actions)
+[![Build Status](https://github.com/machour/yii2-prometheus/workflows/tests/badge.svg)](https://github.com/machour/yii2-prometheus/actions)
 
 
 Installation
