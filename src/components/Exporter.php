@@ -54,20 +54,21 @@ class Exporter extends Component
             }
 
             $name = $metric->name;
-
-            $labels = [];
-            foreach ($metric->labels as $label => $value) {
-                $labels[] = "$label=\"$value\"";
-            }
-            $labels = '{' . join(',', $labels) . '}';
-
-            if ($labels === '{}') {
-                $labels = '';
-            }
-
             $buffer .= "#HELP $name $metric->description\n";
             $buffer .= "#TYPE $name $metric->type\n";
-            $buffer .= "$name$labels $metric->value\n";
+            $buffer .= "$name";
+
+            foreach ($metric->measurements as $measurement) {
+                if (!empty($measurement[1])) {
+                    $labels = [];
+                    foreach ($measurement[1] as $label => $value) {
+                        $labels[] = "$label=\"$value\"";
+                    }
+                    $buffer .= '{' . join(',', $labels) . '}';
+                }
+
+                $buffer .= " $measurement[0]\n";
+            }
         }
 
         $destination = "$this->collectorDir$file";

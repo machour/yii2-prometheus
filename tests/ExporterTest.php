@@ -12,11 +12,10 @@ final class ExporterTest extends TestCase
     {
         $exporter = $this->getExporter();
 
-        $this->assertTrue(
-            $exporter->exportMetric(
-                Metric::gauge('metric_name', 34, [], 'The metric description')
-            )
-        );
+        $gauge = Metric::gauge('metric_name', 'The metric description');
+        $gauge->addMeasurement(34);
+
+        $this->assertTrue($exporter->exportMetric($gauge));
 
         $outFile = $exporter->collectorDir . $exporter->defaultFile;
         $this->assertFileEquals(__DIR__ . '/data/yii2-prometheus-exporter.prom', $outFile);
@@ -26,8 +25,10 @@ final class ExporterTest extends TestCase
     {
         $exporter = $this->getExporter();
 
-        $this->assertTrue($exporter->exportMetric(
-            Metric::gauge('pi', 3.1415, [], 'My gauge'),
+        $gauge = Metric::gauge('pi', 'My gauge');
+        $gauge->addMeasurement(3.1415);
+
+        $this->assertTrue($exporter->exportMetric($gauge,
             'test_gauge'
         ));
 
@@ -39,17 +40,18 @@ final class ExporterTest extends TestCase
     {
         $exporter = $this->getExporter();
 
-        $this->assertTrue($exporter->exportMetric(
-            Metric::gauge('pi', 3.1415, ['foo' => 'bar'], 'My gauge'),
-            'test_labels_one'
-        ));
+        $gauge = Metric::gauge('pi', 'My gauge');
+        $gauge->addMeasurement(3.1415, ['foo' => 'bar']);
+        $this->assertTrue($exporter->exportMetric($gauge, 'test_labels_one'));
 
         $outFile = $exporter->collectorDir . 'test_labels_one.prom';
         $this->assertFileEquals(__DIR__ . '/data/test_labels_one.prom', $outFile);
 
+        $gauge = Metric::gauge('pi', 'My gauge');
+        $gauge->addMeasurement(3.1415, ['baz' => 'cux', 'foo' => 'bar']);
 
         $this->assertTrue($exporter->exportMetric(
-            Metric::gauge('pi', 3.1415, ['baz' => 'cux', 'foo' => 'bar'], 'My gauge'),
+            $gauge,
             'test_labels_two'
         ));
 
@@ -61,11 +63,13 @@ final class ExporterTest extends TestCase
     {
         $exporter = $this->getExporter();
 
-        $this->assertTrue($exporter->exportMetrics([
-            Metric::gauge('pi', 3.1415, [], 'My gauge'),
-            Metric::counter('bugs', 42, [], 'My counter'),
-            ], 'test_multiple'
-        ));
+        $gauge = Metric::gauge('pi', 'My gauge');
+        $gauge->addMeasurement(3.1415);
+
+        $counter = Metric::counter('bugs', 'My counter');
+        $counter->addMeasurement(42);
+
+        $this->assertTrue($exporter->exportMetrics([$gauge, $counter], 'test_multiple'));
 
         $outFile = $exporter->collectorDir . 'test_multiple.prom';
         $this->assertFileEquals(__DIR__ . '/data/test_multiple.prom', $outFile);
@@ -74,23 +78,21 @@ final class ExporterTest extends TestCase
     public function testBadMetric()
     {
         $exporter = $this->getExporter();
-        $this->setExpectedException('\machour\yii2\prometheus\exceptions\ExporterException');
+        $this->expectException('\machour\yii2\prometheus\exceptions\ExporterException');
 
-        $exporter->exportMetric(
-            Metric::gauge('Woo ps', 34, [], 'The metric description'),
-            'test_metric'
-        );
+        $gauge = Metric::gauge('Woo ps',  'The metric description');
+        $gauge->addMeasurement(34);
+        $exporter->exportMetric($gauge, 'test_metric');
     }
 
     public function testFileFailure()
     {
         $exporter = $this->getExporter('/non/existent/dir/');
-        $this->setExpectedException('\machour\yii2\prometheus\exceptions\ExporterException');
+        $this->expectException('\machour\yii2\prometheus\exceptions\ExporterException');
 
-        $exporter->exportMetric(
-            Metric::gauge('metric_name', 34, [], 'The metric description'),
-            'test_metric'
-        );
+        $gauge = Metric::gauge('Woo ps',  'The metric description');
+        $gauge->addMeasurement(34);
+        $exporter->exportMetric($gauge, 'test_metric');
     }
 
     /**

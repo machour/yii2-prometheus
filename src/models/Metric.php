@@ -11,10 +11,6 @@ class Metric extends Model
      */
     public $name;
     /**
-     * @var int|float The metric value
-     */
-    public $value;
-    /**
      * @var string
      */
     public $type;
@@ -22,16 +18,17 @@ class Metric extends Model
      * @var string
      */
     public $description;
+
     /**
      * @var array
      */
-    public $labels;
+    public $measurements = [];
 
     public function rules()
     {
         return [
+            [['name'], 'required'],
             ['name', 'match', 'pattern' => '!^[-_a-z]+$!'],
-            ['value', 'number'],
             ['description', 'string'],
         ];
     }
@@ -41,9 +38,9 @@ class Metric extends Model
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#counter
      */
-    public static function counter($name, $value, array $labels = [], $description = null)
+    public static function counter($name, $description, array $measurements = [])
     {
-        return self::metric('counter', $name, $value, $labels, $description);
+        return self::metric('counter', $name, $description, $measurements);
     }
 
     /**
@@ -51,27 +48,30 @@ class Metric extends Model
      *
      * @see https://prometheus.io/docs/concepts/metric_types/#gauge
      */
-    public static function gauge($name, $value, array $labels = [], $description = null)
+    public static function gauge($name, $description, array $measurements = [])
     {
-        return self::metric('gauge', $name, $value, $labels, $description);
+        return self::metric('gauge', $name, $description, $measurements);
     }
 
     /**
      * @param string $type The metric type
      * @param string $name The metric name
-     * @param float|int $value The metric value
-     * @param array $labels Array of key => value pairs
      * @param string|null $description An optional description for the metric
+     * @param array $measurements Array of measurements
      * @return static
      */
-    private static function metric($type, $name, $value, array $labels = [], $description = null)
+    private static function metric($type, $name, $description, array $measurements = [])
     {
         return new static([
             'name' => $name,
-            'value' => $value,
-            'labels' => $labels,
+            'measurements' => $measurements,
             'description' => $description,
             'type' => $type,
         ]);
+    }
+
+    public function addMeasurement($value, array $labels = [])
+    {
+        $this->measurements[] = [$value, $labels];
     }
 }
