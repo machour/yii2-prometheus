@@ -1,0 +1,4 @@
+#HELP foo My gauge
+#TYPE foo gauge
+foo{type="bar"} 3
+foo{type="baz"} 9

@@ -59,7 +59,7 @@ final class ExporterTest extends TestCase
         $this->assertFileEquals(__DIR__ . '/data/test_labels_two.prom', $outFile);
     }
 
-    public function testExportMultiple()
+    public function testExportMultipleMetrics()
     {
         $exporter = $this->getExporter();
 
@@ -73,6 +73,21 @@ final class ExporterTest extends TestCase
 
         $outFile = $exporter->collectorDir . 'test_multiple.prom';
         $this->assertFileEquals(__DIR__ . '/data/test_multiple.prom', $outFile);
+    }
+
+
+    public function testExportMultipleMeasurements()
+    {
+        $exporter = $this->getExporter();
+
+        $gauge = Metric::gauge('foo', 'My gauge');
+        $gauge->addMeasurement(3, ['type' => 'bar']);
+        $gauge->addMeasurement(9, ['type' => 'baz']);
+
+        $this->assertTrue($exporter->exportMetric($gauge, 'test_multiple_measurements'));
+
+        $outFile = $exporter->collectorDir . 'test_multiple_measurements.prom';
+        $this->assertFileEquals(__DIR__ . '/data/test_multiple_measurements.prom', $outFile);
     }
 
     public function testBadMetric()

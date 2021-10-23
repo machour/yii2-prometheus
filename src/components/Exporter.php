@@ -56,9 +56,9 @@ class Exporter extends Component
             $name = $metric->name;
             $buffer .= "#HELP $name $metric->description\n";
             $buffer .= "#TYPE $name $metric->type\n";
-            $buffer .= "$name";
 
             foreach ($metric->measurements as $measurement) {
+                $buffer .= "$name";
                 if (!empty($measurement[1])) {
                     $labels = [];
                     foreach ($measurement[1] as $label => $value) {
