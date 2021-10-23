@@ -78,7 +78,7 @@ final class ExporterTest extends TestCase
     public function testBadMetric()
     {
         $exporter = $this->getExporter();
-        $this->expectException('\machour\yii2\prometheus\exceptions\ExporterException');
+        $this->setExpectedException('\machour\yii2\prometheus\exceptions\ExporterException');
 
         $gauge = Metric::gauge('Woo ps',  'The metric description');
         $gauge->addMeasurement(34);
@@ -88,7 +88,7 @@ final class ExporterTest extends TestCase
     public function testFileFailure()
     {
         $exporter = $this->getExporter('/non/existent/dir/');
-        $this->expectException('\machour\yii2\prometheus\exceptions\ExporterException');
+        $this->setExpectedException('\machour\yii2\prometheus\exceptions\ExporterException');
 
         $gauge = Metric::gauge('Woo ps',  'The metric description');
         $gauge->addMeasurement(34);
